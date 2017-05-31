@@ -1,0 +1,54 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>{{title}}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 13px Helvetica, Arial; }
+        form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+        form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { padding: 5px 10px; }
+        #messages li:nth-child(odd) { background: #eee; }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script>
+        $(()=>{
+            var socket = io();
+            var testThread="grp_48ff29fca57";
+            var testToken="zLMMwsIr7HJV1JOyKww7mENq1rDz9tGFbUxBZPZtnvI=";
+            var message=(msg,tok,thr)=>{
+              return{
+                  message:msg,
+                  token:tok,
+                  thread:thr
+              }
+            };
+            $("#chatForm").submit(()=>{
+               socket.emit('main_thread',message($("#m").val(),testToken,testThread));
+               $("#m").val('');
+               return false;
+            });
+            socket.on(testThread, function(msg){
+                if(msg.statusCode==200)
+                $('#messages').append($('<li>').text(msg.data.message));
+                else
+                    alert('Please login to send messages');
+            });
+        });
+    </script>
+</head>
+<body>
+    <h3 style="align-content: center">{{message}}</h3>
+<hr>
+<ul id="messages"></ul>
+<form id="chatForm" action="">
+    <input id="m" autocomplete="off"><button>Send</button>
+</form>
+</body>
+</html>
