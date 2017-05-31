@@ -116,16 +116,17 @@ var createNewUserSession=(user)=>{
     var newSession=security.generateToken(user);
     var sessionList=fetchListJson(constants.databaseSessions);
     var findOldSession=sessionList.filter((session)=>session.userId===user.id);
+    var returnSession=models.sessionPublic(user.handle,newSession.token,newSession.created,user.name);
     if(findOldSession.length>0){
         var findOldSessionIndex=sessionList.findIndex((session)=>session.userId===user.id);
         sessionList[findOldSessionIndex]=newSession;
         save(constants.databaseSessions,sessionList);
-        return newSession;
+        return returnSession;
     }
     sessionList.push(newSession);
     save(constants.databaseSessions,sessionList);
     changeCountJson(models.count(0,0,1));
-    return newSession;
+    return returnSession;
 };
 
 var updateUserOnRegistration=(registerModel)=>{

@@ -64,6 +64,15 @@ var session=(id,tok,dat)=>{
     };
 };
 
+var sessionPublic=(han,tok,dat,nam)=>{
+  return {
+      handle:han,
+      token:tok,
+      created:dat,
+      name:nam
+  }
+};
+
 var logout=(tok,han)=>{
   return {
       token:tok,
@@ -97,5 +106,6 @@ module.exports={
     logout,
     invite,
     message,
-    count
+    count,
+    sessionPublic
 };
