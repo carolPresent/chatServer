@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "description": "Nice group",
+    "thread": "grp_48ff29fca57",
+    "handle": "DEV",
+    "createdBy": 1,
+    "userList": [
+      1,
+      2
+    ]
+  },
+  {
+    "id": 2,
+    "description": "hi",
+    "thread": "grp_2d32864db47",
+    "handle": "DEV-Ops",
+    "createdBy": 1,
+    "userList": [
+      1,
+      2
+    ]
+  }
+]
