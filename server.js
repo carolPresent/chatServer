@@ -67,6 +67,7 @@ io.on('connection',(socket)=>{
     onlineUsers++;
     console.log(`User connected\nOnline user count: ${onlineUsers}`);
    socket.on(`${mainMessageThread}`,(msg)=>{
+       console.log(msg);
        var authFlag=chatController.authorizeMessage(msg);
        if(authFlag)
            io.emit(msg.thread, chatController.sendMessage(msg.token,msg.message,msg.thread));
