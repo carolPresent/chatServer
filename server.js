@@ -2,7 +2,7 @@ const express=require('express');
 const fs=require('fs');
 const hbs=require('hbs');
 var app=express();
-const portNumber=process.env.PORT || 6969;
+const portNumber=process.env.PORT || 6007;
 const http=require('http').Server(app);
 const socket=require('socket.io');
 const io=socket(http);
@@ -11,6 +11,8 @@ const bodyParser=require('body-parser');
 const accountController=require('./controllers/account.js');
 const chatController=require('./controllers/chat.js');
 const helpController=require('./controllers/help.js');
+const functions=require('./utils/functions.js');
+const constants=require('./utils/constants.js').get();
 
 var mainMessageThread="main_thread";
 var unauthorizedThread="unauth_thread";
@@ -43,8 +45,45 @@ app.use((req,res,next)=>{
 app.get('/',(req,res)=>{
     res.render('chat.hbs',{
         title:'Real time chat server',
-        message:'Lets get started'
+        message:'Feel free to chat'
     });
+});
+
+app.post('/username',(req,res)=>{
+  var userNames=functions.fetchListJson(constants.databaseUsers);
+  var userCount=userNames.filter((obj)=>obj.userName.toLowerCase()==req.body.userName.toLowerCase()).length;
+  if(userCount>0){
+    res.send(409);
+  } else {
+    userNames.push(req.body);
+    functions.save(constants.databaseUsers,userNames);
+    res.send(200);
+  }
+
+});
+
+app.put('/username',(req,res)=>{
+  var userNames=functions.fetchListJson(constants.databaseUsers);
+
+  if(userNames.filter( (obj)=>obj.userName==req.body.newUserName ).length>0){
+    res.send(409);
+  } else {
+    for(var index=0;index<userNames.length;index++){
+      if(userNames[index].userName==req.body.userName){
+        userNames[index].userName=req.body.newUserName;
+        userNames[index].ip=req.body.ip;
+        break;
+      }
+    }
+    functions.save(constants.databaseUsers,userNames);
+    res.send(200);
+  }
+});
+
+app.get('/loadpreviouschat',(req,res)=>{
+  var messages=functions.fetchListJson(constants.databaseMessages);
+  //res.send(200,[]);
+  res.send(200,messages);
 });
 
 app.get('/api/help',(req,res)=>{
@@ -65,17 +104,35 @@ hbs.registerHelper('getHelpPageData',()=>{
 
 io.on('connection',(socket)=>{
     onlineUsers++;
+
+    io.emit("userCount",onlineUsers);
+
     console.log(`User connected\nOnline user count: ${onlineUsers}`);
    socket.on(`${mainMessageThread}`,(msg)=>{
-       console.log(msg);
+
+      var userNames=functions.fetchListJson(constants.databaseUsers);
+      if(userNames.filter( (obj)=>obj.userName==msg.token ).length>0){
+        var messages=functions.fetchListJson(constants.databaseMessages);
+        messages.push(msg);
+        functions.save(constants.databaseMessages,messages);
+        msg.success=true;
+      }else{
+        msg.success=false;
+      }
+
+      io.emit(msg.thread,msg);
+
+       /*
        var authFlag=chatController.authorizeMessage(msg);
        if(authFlag)
            io.emit(msg.thread, chatController.sendMessage(msg.token,msg.message,msg.thread));
        else
            io.emit(msg.thread,{status:"Unauthorized request",statusCode:401,message:"User not logged in"});
+         */
    });
    socket.on('disconnect',()=>{
        onlineUsers--;
+       io.emit("userCount",onlineUsers);
        console.log(`User disconnected\nOnline user count: ${onlineUsers}`);
    });
 });

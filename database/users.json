@@ -1,20 +1,14 @@
 [
   {
-    "id": 1,
-    "email": "swapnil.kum1995@gmail.com",
-    "iCode": "e4e149c0aa250d97f416b8f53e42163162e0f6a95dd8a4a879e05f529a24d49b",
-    "name": "Swapnil Kumar",
-    "handle": "larney_binson",
-    "password": "bKE9UspwyIPg8LsQHkJaiehiTeUdstI5JZOvaoQRgJA=",
-    "status": true
+    "ip": "192.168.0.102",
+    "userName": "admin"
   },
   {
-    "id": 2,
-    "email": "trer@d.com",
-    "iCode": "eafb26fecdfadd85b3056b5a909ae6a0ac61f8b2cac31e8c0c6cd202739d9316",
-    "name": "Dev",
-    "handle": "a",
-    "password": "bKE9UspwyIPg8LsQHkJaiehiTeUdstI5JZOvaoQRgJA=",
-    "status": true
+    "ip": "192.168.0.103",
+    "userName": "mmmmmrajput"
+  },
+  {
+    "ip": "192.168.0.101",
+    "userName": "anonymous"
   }
 ]

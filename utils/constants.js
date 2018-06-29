@@ -10,7 +10,8 @@ var get=()=>{
       databaseGroups:appDir+'/database/groups.json',
       databaseSessions:appDir+'/database/sessions.json',
       databaseUsers:appDir+'/database/users.json',
-      databaseApiHelp:appDir+'/database/apihelp.json'
+      databaseApiHelp:appDir+'/database/apihelp.json',
+      databaseMessages:appDir+'/database/messages.json'
   };
 };
 
